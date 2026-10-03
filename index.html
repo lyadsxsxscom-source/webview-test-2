@@ -298,8 +298,15 @@ function renderSheet(){
 function updateWA(){
   $("#wa").href = "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(orderText());
 }
-function openSheet(){ renderSheet(); const d = $("#sheet"); d.showModal ? d.showModal() : d.setAttribute("open",""); }
+function openSheet(){
+  renderSheet(); const d = $("#sheet");
+  if(d.showModal){ d.showModal(); try{ history.pushState({ cart:1 }, ""); }catch(e){} }
+  else d.setAttribute("open","");
+}
 function closeSheet(){ const d = $("#sheet"); d.close ? d.close() : d.removeAttribute("open"); }
+// زر الرجوع بالجوال: يسكّر السلة أولاً بدل ما يطلع من الصفحة
+$("#sheet").addEventListener("close", () => { if(history.state && history.state.cart){ history.back(); } });
+window.addEventListener("popstate", () => { const d = $("#sheet"); if(d.open) d.close(); });
 
 let tt;
 function toast(msg){
