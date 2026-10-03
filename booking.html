@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>حجز موعد - صالون الزعيم (نموذج تجريبي)</title>
+<meta name="description" content="صفحة حجز مواعيد بالعربي: اختيار الخدمة والحلاق واليوم والوقت، وتأكيد فوري.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lalezar&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F2F4FA; --surface:#FFFFFF; --ink:#0F1633; --muted:#586082; --line:#CDD3E8;
+  --cobalt:#2744D6; --on-cobalt:#FFFFFF; --red:#D93A3F; --ok:#1B7F52; --disabled:#E4E8F4;
+  --font-display:"Lalezar","Reem Kufi","Segoe UI",Tahoma,sans-serif;
+  --font-body:"Tajawal","Noto Sans Arabic","Segoe UI",Tahoma,Arial,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C1022; --surface:#151B38; --ink:#EEF1FF; --muted:#9AA3C9; --line:#2A3262;
+    --cobalt:#7C91FF; --on-cobalt:#0C1022; --red:#FF7378; --ok:#4CD08E; --disabled:#1C2346;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C1022; --surface:#151B38; --ink:#EEF1FF; --muted:#9AA3C9; --line:#2A3262;
+  --cobalt:#7C91FF; --on-cobalt:#0C1022; --red:#FF7378; --ok:#4CD08E; --disabled:#1C2346;
+}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 12px);-webkit-text-size-adjust:100%}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:17px;line-height:1.6}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--cobalt);outline-offset:2px;border-radius:8px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* barber-pole band + hero */
+.pole{height:12px;background:repeating-linear-gradient(-45deg,var(--red) 0 12px,#fff 12px 24px,var(--cobalt) 24px 36px,#fff 36px 48px)}
+.hero{background:var(--cobalt);color:var(--on-cobalt);padding:22px 20px 26px}
+.hero h1{font-family:var(--font-display);font-weight:400;font-size:clamp(2.6rem,12vw,3.8rem);line-height:1.05;margin:0 0 6px}
+.hero p{margin:0;font-size:1.02rem;opacity:.95}
+.hero .hours{margin-top:10px;font-size:.92rem;opacity:.85}
+
+main{max-width:600px;margin:0 auto;padding:8px 16px 150px}
+.stepbox{margin-top:26px}
+.head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.num{flex:0 0 auto;width:36px;height:36px;border-radius:50%;background:var(--ink);color:var(--bg);display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.25rem;padding-top:3px}
+.head h2{font-family:var(--font-display);font-weight:400;font-size:1.55rem;margin:0;line-height:1.2}
+.head small{display:block;color:var(--muted);font-size:.88rem;font-family:var(--font-body)}
+
+/* option rows (radio) */
+.opts{display:grid;gap:8px}
+.opt{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer}
+.opt input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.opt:has(input:checked){border-color:var(--cobalt);box-shadow:inset 0 0 0 1px var(--cobalt)}
+.opt:has(input:focus-visible){outline:3px solid var(--cobalt);outline-offset:2px}
+.opt b{font-weight:700}
+.opt .sub{display:block;color:var(--muted);font-size:.86rem}
+.opt .pr{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.barbers{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.barber{position:relative;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:10px 4px;text-align:center;cursor:pointer;font-size:.92rem;line-height:1.3}
+.barber input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.barber:has(input:checked){border-color:var(--cobalt);box-shadow:inset 0 0 0 1px var(--cobalt)}
+.barber:has(input:focus-visible){outline:3px solid var(--cobalt);outline-offset:2px}
+.av{display:flex;width:44px;height:44px;margin:0 auto 4px;border-radius:50%;background:var(--disabled);align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.3rem;padding-top:3px}
+.barber:has(input:checked) .av{background:var(--cobalt);color:var(--on-cobalt)}
+
+/* dates */
+.days{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;scrollbar-width:none}
+.days::-webkit-scrollbar{display:none}
+.day{position:relative;flex:0 0 66px;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:8px 2px;text-align:center;line-height:1.25;cursor:pointer}
+.day input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.day .w{display:block;font-size:.8rem;color:var(--muted)}
+.day .d{display:block;font-family:var(--font-display);font-size:1.6rem;padding-top:2px}
+.day .m{display:block;font-size:.72rem;color:var(--muted)}
+.day:has(input:checked){background:var(--cobalt);border-color:var(--cobalt);color:var(--on-cobalt)}
+.day:has(input:checked) .w,.day:has(input:checked) .m{color:var(--on-cobalt);opacity:.85}
+.day:has(input:focus-visible){outline:3px solid var(--cobalt);outline-offset:2px}
+.day.off{background:var(--disabled);color:var(--muted);cursor:not-allowed}
+.day.off input{cursor:not-allowed}
+
+/* time slots */
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.slot{position:relative;border:2px solid var(--line);border-radius:12px;background:var(--surface);padding:10px 4px;text-align:center;font-weight:500;font-variant-numeric:tabular-nums;cursor:pointer}
+.slot input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.slot:has(input:checked){background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.slot:has(input:focus-visible){outline:3px solid var(--cobalt);outline-offset:2px}
+.slot.off{background:var(--disabled);color:var(--muted);text-decoration:line-through;cursor:not-allowed;font-weight:400}
+.slot.off input{cursor:not-allowed}
+.hint{color:var(--muted);font-size:.92rem;margin:6px 0 0}
+
+/* form */
+.field{display:block;margin-top:12px}
+.field span{display:block;font-size:.92rem;color:var(--muted);margin-bottom:4px}
+.field input{width:100%;padding:12px 13px;border:2px solid var(--line);background:var(--surface);border-radius:12px}
+.field input[aria-invalid="true"]{border-color:var(--red)}
+.err{color:var(--red);font-size:.88rem;margin:4px 0 0;min-height:1.2em}
+
+/* sticky summary */
+.bar{position:fixed;inset-inline:0;bottom:0;z-index:10;background:var(--surface);border-top:2px solid var(--ink);padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:12px;align-items:center;justify-content:space-between}
+.bar .sum{min-width:0;line-height:1.3}
+.bar .sum b{display:block;font-size:1.05rem}
+.bar .sum span{display:block;color:var(--muted);font-size:.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.go{flex:0 0 auto;background:var(--cobalt);color:var(--on-cobalt);border:0;border-radius:14px;padding:13px 22px;font-weight:700;font-size:1.05rem}
+
+/* ticket */
+.ticket{background:var(--surface);border:2px solid var(--ink);border-radius:18px;overflow:hidden;margin-top:20px}
+.ticket .pole{height:10px}
+.ticket .body{padding:16px 18px 18px}
+.ticket h2{font-family:var(--font-display);font-weight:400;font-size:1.9rem;margin:0 0 2px;color:var(--ok)}
+.ticket dl{margin:12px 0 0;display:grid;grid-template-columns:auto 1fr;gap:6px 14px}
+.ticket dt{color:var(--muted)}
+.ticket dd{margin:0;font-weight:700}
+.code{margin-top:14px;border-top:2px dashed var(--line);padding-top:12px;display:flex;justify-content:space-between;align-items:center;color:var(--muted)}
+.code strong{font-family:var(--font-display);font-weight:400;font-size:1.7rem;color:var(--ink);letter-spacing:1px}
+.acts{display:grid;gap:10px;margin-top:14px}
+.btn{display:block;text-align:center;text-decoration:none;border-radius:12px;padding:13px 16px;font-weight:700;border:0}
+.btn.primary{background:var(--cobalt);color:var(--on-cobalt)}
+.btn.ghost{background:transparent;border:2px solid var(--ink);color:var(--ink)}
+.mine{margin-top:30px}
+.mine h2{font-family:var(--font-display);font-weight:400;font-size:1.4rem;margin:0 0 8px}
+.mine ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.mine li{background:var(--surface);border:2px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.mine li small{display:block;color:var(--muted)}
+.mine .x{background:transparent;border:2px solid var(--red);color:var(--red);border-radius:10px;padding:5px 12px;font-weight:700}
+.note{color:var(--muted);font-size:.86rem;margin-top:26px}
+.toast{position:fixed;inset-inline:0;bottom:100px;margin-inline:auto;width:max-content;max-width:90%;background:var(--ink);color:var(--bg);padding:9px 18px;border-radius:999px;font-size:.92rem;z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.on{opacity:1}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="pole" aria-hidden="true"></div>
+<header class="hero">
+  <h1>صالون الزعيم</h1>
+  <p>حلاقة رجالية ودقن، احجز مكانك بدون اتصال</p>
+  <p class="hours">من 10 صباحاً حتى 9 مساءً، كل يوم عدا الجمعة</p>
+</header>
+
+<main id="app">
+  <section id="flow">
+    <div class="stepbox">
+      <div class="head"><span class="num" aria-hidden="true">1</span><h2 id="h-svc">الخدمة</h2></div>
+      <div class="opts" id="svc" role="radiogroup" aria-labelledby="h-svc"></div>
+    </div>
+    <div class="stepbox">
+      <div class="head"><span class="num" aria-hidden="true">2</span><h2 id="h-bar">الحلاق</h2></div>
+      <div class="barbers" id="barbers" role="radiogroup" aria-labelledby="h-bar"></div>
+    </div>
+    <div class="stepbox">
+      <div class="head"><span class="num" aria-hidden="true">3</span><h2 id="h-day">اليوم</h2></div>
+      <div class="days" id="days" role="radiogroup" aria-labelledby="h-day"></div>
+    </div>
+    <div class="stepbox" id="timebox">
+      <div class="head"><span class="num" aria-hidden="true">4</span><h2 id="h-time">الوقت</h2></div>
+      <div class="slots" id="slots" role="radiogroup" aria-labelledby="h-time"></div>
+      <p class="hint" id="slotHint"></p>
+    </div>
+    <div class="stepbox" id="formbox">
+      <div class="head"><span class="num" aria-hidden="true">5</span><h2>بياناتك</h2></div>
+      <label class="field"><span>الاسم</span><input id="name" autocomplete="name" aria-describedby="e-name"></label>
+      <p class="err" id="e-name"></p>
+      <label class="field"><span>رقم الموبايل</span><input id="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="09XXXXXXXX" aria-describedby="e-phone"></label>
+      <p class="err" id="e-phone"></p>
+    </div>
+  </section>
+
+  <section id="done" hidden></section>
+  <section class="mine" id="mine" hidden>
+    <h2>حجوزاتك القادمة</h2>
+    <ul id="mineList"></ul>
+  </section>
+  <p class="note">هذا نموذج تجريبي لصفحة حجز مواعيد. يمكن ربطه بقاعدة بيانات ولوحة تحكم للصالون، وبإشعار واتساب لكل حجز جديد.</p>
+</main>
+
+<div class="bar" id="bar">
+  <div class="sum"><b id="sumTitle">اختر الخدمة</b><span id="sumSub"></span></div>
+  <button type="button" class="go" id="go">تأكيد الحجز</button>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+// ===== إعدادات الصالون: تتغيّر لكل زبون =====
+const CUR = "ل.س";
+const SERVICES = [
+  { id:"cut",      name:"قص شعر",                       min:30, price:300 },
+  { id:"cutbeard", name:"قص شعر مع دقن",                min:45, price:450 },
+  { id:"beard",    name:"حلاقة دقن",                    min:30, price:200 },
+  { id:"royal",    name:"حلاقة ملكية بالموس والكمادات", min:60, price:600 },
+  { id:"skin",     name:"تنظيف بشرة",                   min:30, price:500 }
+];
+const BARBERS = [
+  { id:"any", name:"أي حلاق متاح", ini:"؟" },
+  { id:"a",   name:"أبو سامر",     ini:"أ" },
+  { id:"b",   name:"محمود",        ini:"م" },
+  { id:"c",   name:"خالد",         ini:"خ" }
+];
+const OPEN = 10*60, CLOSE = 21*60, STEP = 30;
+const CLOSED_WEEKDAY = 5; // الجمعة
+const WD = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+const MON = ["كانون الثاني","شباط","آذار","نيسان","أيار","حزيران","تموز","آب","أيلول","تشرين الأول","تشرين الثاني","كانون الأول"];
+const KEY = "zaeem_demo_bookings_v1";
+
+const $ = s => document.querySelector(s);
+const state = { svc:null, barber:"any", date:null, time:null };
+
+/* ---------- helpers ---------- */
+const pad = n => String(n).padStart(2,"0");
+const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const parseISO = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d); };
+const fmt = n => n.toLocaleString("en-US");
+function clock(t){ const h = Math.floor(t/60), m = t%60, ap = h >= 12 ? "م" : "ص", hh = h % 12 || 12; return `${hh}:${pad(m)} ${ap}`; }
+function dayLabel(s){ const d = parseISO(s); return `${WD[d.getDay()]} ${d.getDate()} ${MON[d.getMonth()]}`; }
+function hash(s){ let x = 2166136261; for(let i=0;i<s.length;i++){ x ^= s.charCodeAt(i); x = Math.imul(x, 16777619); } return ((x>>>0) % 1000) / 1000; }
+function span(svc){ return Math.ceil(svc.min / STEP); }
+
+function load(){ try{ return JSON.parse(localStorage.getItem(KEY) || "[]"); }catch(e){ return []; } }
+function save(list){ try{ localStorage.setItem(KEY, JSON.stringify(list)); }catch(e){} }
+let bookings = load();
+
+/* ---------- availability ---------- */
+function slotTimes(){ const a = []; for(let t = OPEN; t < CLOSE; t += STEP) a.push(t); return a; }
+function busy(barber, date, t){
+  if(hash(date + barber + t) < 0.33) return true;
+  return bookings.some(b => b.barber === barber && b.date === date && t >= b.t && t < b.t + b.n*STEP);
+}
+function freeFor(barber, date, t, n){
+  for(let k = 0; k < n; k++){ const tt = t + k*STEP; if(tt >= CLOSE || busy(barber, date, tt)) return false; }
+  return true;
+}
+function freeBarbers(date, t, n){
+  const ids = state.barber === "any" ? BARBERS.filter(b => b.id !== "any").map(b => b.id) : [state.barber];
+  return ids.filter(id => freeFor(id, date, t, n));
+}
+function isClosed(dateStr){ return parseISO(dateStr).getDay() === CLOSED_WEEKDAY; }
+function isPast(dateStr, t){
+  const now = new Date();
+  if(dateStr !== iso(now)) return false;
+  return t <= now.getHours()*60 + now.getMinutes() + 15;
+}
+function dayState(dateStr){
+  if(isClosed(dateStr)) return "closed";
+  const now = new Date();
+  if(dateStr === iso(now) && CLOSE - STEP <= now.getHours()*60 + now.getMinutes() + 15) return "over";
+  return "ok";
+}
+function slotOK(t){
+  if(!state.svc || !state.date || isClosed(state.date) || isPast(state.date, t)) return false;
+  return freeBarbers(state.date, t, span(state.svc)).length > 0;
+}
+
+/* ---------- render ---------- */
+function renderServices(){
+  $("#svc").innerHTML = SERVICES.map(s => `<label class="opt"><input type="radio" name="svc" value="${s.id}" ${state.svc && state.svc.id === s.id ? "checked" : ""}>
+    <span><b>${s.name}</b><span class="sub">${s.min} دقيقة</span></span><span class="pr">${fmt(s.price)} ${CUR}</span></label>`).join("");
+}
+function renderBarbers(){
+  $("#barbers").innerHTML = BARBERS.map(b => `<label class="barber"><input type="radio" name="barber" value="${b.id}" ${state.barber === b.id ? "checked" : ""}>
+    <span class="av" aria-hidden="true">${b.ini}</span>${b.name}</label>`).join("");
+}
+function days(){ const a = []; const d = new Date(); for(let i = 0; i < 7; i++){ a.push(iso(new Date(d.getFullYear(), d.getMonth(), d.getDate() + i))); } return a; }
+function renderDays(){
+  $("#days").innerHTML = days().map((s, i) => {
+    const d = parseISO(s), st = dayState(s), off = st !== "ok";
+    return `<label class="day ${off ? "off" : ""}"><input type="radio" name="day" value="${s}" ${off ? "disabled" : ""} ${state.date === s ? "checked" : ""}>
+      <span class="w">${i === 0 ? "اليوم" : WD[d.getDay()]}</span><span class="d">${d.getDate()}</span><span class="m">${st === "closed" ? "مغلق" : st === "over" ? "انتهى الدوام" : MON[d.getMonth()]}</span></label>`;
+  }).join("");
+}
+function renderSlots(){
+  const box = $("#slots"), hint = $("#slotHint");
+  if(!state.svc || !state.date){
+    box.innerHTML = ""; hint.textContent = !state.svc ? "اختر الخدمة أولاً لنعرض الأوقات المتاحة." : "اختر اليوم لنعرض الأوقات المتاحة."; return;
+  }
+  const times = slotTimes();
+  box.innerHTML = times.map(t => { const ok = slotOK(t);
+    return `<label class="slot ${ok ? "" : "off"}"><input type="radio" name="time" value="${t}" ${ok ? "" : "disabled"} ${state.time === t ? "checked" : ""}>${clock(t)}</label>`; }).join("");
+  const any = times.some(slotOK);
+  hint.textContent = any ? `مدة الخدمة ${state.svc.min} دقيقة. الأوقات المشطوبة محجوزة.` : "ما في أوقات متاحة بهاليوم، جرّب يوم تاني.";
+}
+function renderBar(){
+  if(!state.svc){ $("#sumTitle").textContent = "اختر الخدمة"; $("#sumSub").textContent = ""; return; }
+  $("#sumTitle").textContent = `${fmt(state.svc.price)} ${CUR}`;
+  const parts = [state.svc.name];
+  if(state.date) parts.push(dayLabel(state.date));
+  if(state.time !== null) parts.push(clock(state.time));
+  $("#sumSub").textContent = parts.join("، ");
+}
+function renderMine(){
+  const today = iso(new Date());
+  const list = bookings.filter(b => b.date >= today).sort((a,b) => (a.date + pad(a.t/60|0)).localeCompare(b.date + pad(b.t/60|0)));
+  $("#mine").hidden = list.length === 0;
+  $("#mineList").innerHTML = list.map(b => {
+    const s = SERVICES.find(x => x.id === b.svc), br = BARBERS.find(x => x.id === b.barber);
+    return `<li><div><b>${s.name}</b><small>${dayLabel(b.date)}، ${clock(b.t)} مع ${br.name}</small></div><button type="button" class="x" data-cancel="${b.code}" aria-label="إلغاء حجز ${dayLabel(b.date)}">إلغاء</button></li>`;
+  }).join("");
+}
+
+/* ---------- interactions ---------- */
+document.addEventListener("change", e => {
+  const t = e.target;
+  if(t.name === "svc"){ state.svc = SERVICES.find(s => s.id === t.value); if(state.time !== null && !slotOK(state.time)) state.time = null; renderSlots(); }
+  if(t.name === "barber"){ state.barber = t.value; if(state.time !== null && !slotOK(state.time)) state.time = null; renderSlots(); }
+  if(t.name === "day"){ state.date = t.value; if(state.time !== null && !slotOK(state.time)) state.time = null; renderSlots(); }
+  if(t.name === "time"){ state.time = Number(t.value); }
+  renderBar();
+});
+document.addEventListener("click", e => {
+  const c = e.target.closest("[data-cancel]");
+  if(c){ bookings = bookings.filter(b => b.code !== c.dataset.cancel); save(bookings); renderMine(); renderSlots(); toast("تم إلغاء الحجز"); }
+});
+
+let tt;
+function toast(msg){ const t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("on"), 2200); }
+
+function phoneOK(v){
+  const d = v.replace(/\D/g, "");
+  return /^(963|0)?9\d{8}$/.test(d);
+}
+function setErr(id, inputId, msg){ $(id).textContent = msg; $(inputId).setAttribute("aria-invalid", msg ? "true" : "false"); }
+function jumpTo(sel){ const el = $(sel); if(el) el.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"center" }); }
+
+$("#go").addEventListener("click", () => {
+  if(!state.svc){ toast("اختر الخدمة أولاً"); jumpTo("#svc"); return; }
+  if(!state.date){ toast("اختر اليوم"); jumpTo("#days"); return; }
+  if(state.time === null){ toast("اختر الوقت"); jumpTo("#slots"); return; }
+  const name = $("#name").value.trim(), phone = $("#phone").value.trim();
+  setErr("#e-name", "#name", name.length < 2 ? "اكتب اسمك." : "");
+  setErr("#e-phone", "#phone", phoneOK(phone) ? "" : "اكتب رقم موبايل صحيح، مثلاً 0933123456.");
+  if(name.length < 2){ $("#name").focus(); return; }
+  if(!phoneOK(phone)){ $("#phone").focus(); return; }
+
+  const n = span(state.svc);
+  const free = freeBarbers(state.date, state.time, n);
+  if(!free.length){ toast("هالوقت انحجز للتو، اختر وقتاً تانياً"); state.time = null; renderSlots(); renderBar(); return; }
+  const barber = free[0];
+  const code = "ز-" + (1000 + Math.floor(Math.random()*9000));
+  const b = { code, svc:state.svc.id, barber, date:state.date, t:state.time, n, name, phone };
+  bookings.push(b); save(bookings);
+  showTicket(b);
+});
+
+function ticketText(b){
+  const s = SERVICES.find(x => x.id === b.svc), br = BARBERS.find(x => x.id === b.barber);
+  return `حجز في صالون الزعيم\nالخدمة: ${s.name}\nالموعد: ${dayLabel(b.date)} الساعة ${clock(b.t)}\nالحلاق: ${br.name}\nرقم الحجز: ${b.code}`;
+}
+function showTicket(b){
+  const s = SERVICES.find(x => x.id === b.svc), br = BARBERS.find(x => x.id === b.barber);
+  $("#flow").hidden = true; $("#bar").hidden = true;
+  const d = $("#done"); d.hidden = false;
+  d.innerHTML = `<div class="ticket"><div class="pole" aria-hidden="true"></div><div class="body">
+    <h2>تم تأكيد حجزك</h2><p style="margin:0;color:var(--muted)">أهلاً ${escapeHTML(b.name)}، منشوفك بالموعد.</p>
+    <dl><dt>الخدمة</dt><dd>${s.name}</dd><dt>اليوم</dt><dd>${dayLabel(b.date)}</dd>
+    <dt>الوقت</dt><dd>${clock(b.t)} حتى ${clock(b.t + b.n*STEP)}</dd><dt>الحلاق</dt><dd>${br.name}</dd><dt>السعر</dt><dd>${fmt(s.price)} ${CUR}</dd></dl>
+    <div class="code"><span>رقم الحجز</span><strong>${b.code}</strong></div>
+    <div class="acts">
+      <a class="btn primary" href="https://wa.me/?text=${encodeURIComponent(ticketText(b))}" target="_blank" rel="noopener">أرسل تفاصيل الحجز عبر واتساب</a>
+      <button type="button" class="btn ghost" id="copyT">نسخ التفاصيل</button>
+      <button type="button" class="btn ghost" id="again">حجز موعد جديد</button>
+    </div></div></div>`;
+  renderMine();
+  $("#copyT").addEventListener("click", async () => {
+    try{ await navigator.clipboard.writeText(ticketText(b)); toast("تم نسخ التفاصيل"); }
+    catch(e){ const ta = document.createElement("textarea"); ta.value = ticketText(b); document.body.appendChild(ta); ta.select(); try{ document.execCommand("copy"); toast("تم نسخ التفاصيل"); }catch(_){ toast("تعذّر النسخ"); } ta.remove(); }
+  });
+  $("#again").addEventListener("click", resetFlow);
+  window.scrollTo(0, 0);
+}
+function escapeHTML(s){ return s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function resetFlow(){
+  state.svc = null; state.barber = "any"; state.date = null; state.time = null;
+  $("#name").value = ""; $("#phone").value = ""; setErr("#e-name","#name",""); setErr("#e-phone","#phone","");
+  $("#done").hidden = true; $("#done").innerHTML = ""; $("#flow").hidden = false; $("#bar").hidden = false;
+  renderServices(); renderBarbers(); renderDays(); renderSlots(); renderBar(); renderMine();
+  window.scrollTo(0, 0);
+}
+
+/* ---------- init ---------- */
+(function init(){
+  const first = days().find(s => dayState(s) === "ok");
+  state.date = first || null;
+  renderServices(); renderBarbers(); renderDays(); renderSlots(); renderBar(); renderMine();
+})();
+</script>
+</body>
+</html>

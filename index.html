@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>منيو مطعم الميناء - نموذج تجريبي</title>
+<meta name="description" content="منيو رقمي بالعربي: يفتح بمسح رمز QR، ويرسل الطلب عبر واتساب.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F3F6F5; --surface:#FFFFFF; --ink:#0D2B36; --muted:#54707C; --line:#BFD0D4;
+  --accent:#F0BE2B; --accent-ink:#2B2200; --hot:#B83C26; --btn:#0D2B36; --btn-ink:#FFFFFF;
+  --font-display:"Reem Kufi","Noto Kufi Arabic","Segoe UI",Tahoma,sans-serif;
+  --font-body:"IBM Plex Sans Arabic","Noto Sans Arabic","Segoe UI",Tahoma,Arial,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0A1E26; --surface:#10303B; --ink:#E8F1F2; --muted:#93AFB8; --line:#27535F;
+    --accent:#F0BE2B; --accent-ink:#2B2200; --hot:#F08A72; --btn:#F0BE2B; --btn-ink:#2B2200;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0A1E26; --surface:#10303B; --ink:#E8F1F2; --muted:#93AFB8; --line:#27535F;
+  --accent:#F0BE2B; --accent-ink:#2B2200; --hot:#F08A72; --btn:#F0BE2B; --btn-ink:#2B2200;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.6;min-height:100vh}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--ink);outline-offset:2px;border-radius:6px}
+:root[data-theme="dark"] :focus-visible,
+:root:not([data-theme="light"]) :focus-visible{outline-color:var(--accent)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* hero */
+.hero{background:var(--accent);color:var(--accent-ink);padding:28px 20px 56px;position:relative;display:flex;gap:18px;align-items:flex-start;justify-content:space-between}
+.hero h1{font-family:var(--font-display);font-weight:700;font-size:clamp(2.4rem,11vw,3.6rem);line-height:1.05;margin:0 0 10px}
+.tagline{font-size:1.05rem;font-weight:500;margin:0 0 4px}
+.hours{font-size:.9rem;margin:0;opacity:.85}
+.qr{margin:0;flex:0 0 auto;width:112px;text-align:center}
+.qr .tile{background:#fff;padding:8px;border-radius:10px;width:112px;height:112px;display:flex;align-items:center;justify-content:center;transform:rotate(-3deg);box-shadow:0 2px 0 rgba(43,34,0,.25)}
+.qr .tile canvas,.qr .tile img{width:96px!important;height:96px!important;display:block}
+.qr figcaption{font-size:.74rem;line-height:1.35;margin-top:10px}
+.wave{position:absolute;left:0;right:0;bottom:-1px;height:30px;width:100%;display:block}
+.wave path{fill:var(--bg)}
+
+/* search + categories */
+.search{padding:6px 16px 10px}
+.search input{width:100%;padding:12px 14px;border:1.5px solid var(--line);background:var(--surface);border-radius:12px;font-size:1rem}
+.cats{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:8px;overflow-x:auto;padding:8px 16px 12px;border-bottom:1.5px solid var(--line);scrollbar-width:none}
+.cats::-webkit-scrollbar{display:none}
+.cats button{flex:0 0 auto;border:1.5px solid var(--line);background:var(--surface);padding:7px 16px;border-radius:999px;font-weight:500;font-size:.95rem}
+.cats button[aria-current="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+/* menu */
+main{padding:6px 16px 140px;max-width:640px;margin:0 auto}
+.cat{padding-top:26px;scroll-margin-top:72px}
+.cat h2{font-family:var(--font-display);font-size:1.65rem;margin:0 0 4px;font-weight:700}
+.cat .note{margin:0 0 6px;color:var(--muted);font-size:.9rem}
+.item{padding:14px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:0}
+.line{display:flex;align-items:baseline;gap:6px}
+.name{margin:0;font-size:1.06rem;font-weight:600}
+.leader{flex:1;border-bottom:2px dotted var(--line);min-width:14px;transform:translateY(-4px)}
+.price{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.price small{font-weight:400;color:var(--muted);font-size:.78rem}
+.desc{margin:2px 0 0;color:var(--muted);font-size:.9rem;max-width:44ch}
+.meta{display:flex;align-items:center;justify-content:space-between;margin-top:8px;min-height:40px;gap:8px}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:.75rem;padding:1px 9px;border-radius:999px;border:1.5px solid var(--line);color:var(--muted)}
+.tag.hot{border-color:var(--hot);color:var(--hot)}
+.tag.fav{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:500}
+.add{background:var(--btn);color:var(--btn-ink);border:0;border-radius:999px;padding:7px 20px;font-weight:600;min-height:40px}
+.step{display:inline-flex;align-items:center;gap:2px;background:var(--surface);border:1.5px solid var(--ink);border-radius:999px}
+.step button{width:40px;height:38px;border:0;background:transparent;font-size:1.3rem;font-weight:600;border-radius:999px}
+.step output{min-width:24px;text-align:center;font-weight:600;font-variant-numeric:tabular-nums}
+.empty{padding:36px 0;text-align:center;color:var(--muted)}
+footer{max-width:640px;margin:0 auto;padding:0 16px 40px;color:var(--muted);font-size:.85rem}
+footer p{margin:0 0 6px}
+
+/* cart bar */
+.cartbar{position:fixed;inset-inline:0;bottom:0;z-index:20;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));background:var(--bg);border-top:1.5px solid var(--ink)}
+.cartbar[hidden]{display:none}
+.cartbar button{width:100%;display:flex;justify-content:space-between;align-items:center;background:var(--btn);color:var(--btn-ink);border:0;border-radius:14px;padding:14px 18px;font-weight:600;font-size:1.05rem}
+.cartbar .count{background:var(--btn-ink);color:var(--btn);border-radius:999px;min-width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;font-size:.9rem;margin-inline-start:8px}
+
+/* order sheet */
+dialog{border:0;padding:0;width:min(560px,100%);max-width:100%;max-height:92vh;margin:auto auto 0;border-radius:20px 20px 0 0;background:var(--bg);color:var(--ink)}
+dialog::backdrop{background:rgba(5,20,26,.55)}
+.sheet{padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px))}
+.sheet header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.sheet h2{font-family:var(--font-display);margin:0;font-size:1.5rem}
+.close{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;width:40px;height:40px;font-size:1.2rem}
+.lines{list-style:none;margin:0;padding:0}
+.lines li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.lines .ln{flex:1;font-weight:500}
+.lines .lp{font-variant-numeric:tabular-nums;color:var(--muted);font-size:.9rem;min-width:70px;text-align:end}
+.field{display:block;margin-top:12px}
+.field span{display:block;font-size:.9rem;color:var(--muted);margin-bottom:4px}
+.field input,.field textarea{width:100%;padding:11px 12px;border:1.5px solid var(--line);background:var(--surface);border-radius:10px}
+.total{display:flex;justify-content:space-between;font-size:1.15rem;font-weight:600;margin-top:16px}
+.actions{display:grid;gap:10px;margin-top:14px}
+.btn{display:block;text-align:center;text-decoration:none;border-radius:12px;padding:13px 16px;font-weight:600;border:0}
+.btn.primary{background:var(--btn);color:var(--btn-ink)}
+.btn.ghost{background:transparent;border:1.5px solid var(--ink);color:var(--ink)}
+.toast{position:fixed;inset-inline:0;bottom:90px;margin-inline:auto;width:max-content;max-width:90%;background:var(--ink);color:var(--bg);padding:9px 18px;border-radius:999px;font-size:.9rem;z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.on{opacity:1}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div>
+    <h1 id="rname">مطعم الميناء</h1>
+    <p class="tagline">أسماك طازجة ومشاوي على الفحم</p>
+    <p class="hours">يومياً من 12 ظهراً حتى 11 مساءً</p>
+  </div>
+  <figure class="qr" id="qrbox">
+    <div class="tile" id="qr" role="img" aria-label="رمز QR لفتح المنيو"></div>
+    <figcaption>امسح الرمز لفتح المنيو على جوالك</figcaption>
+  </figure>
+  <svg class="wave" viewBox="0 0 400 30" preserveAspectRatio="none" aria-hidden="true"><path d="M0 14 C 40 0, 80 0, 120 14 S 200 28, 240 14 S 320 0, 400 14 L400 30 L0 30 Z"/></svg>
+</header>
+
+<div class="search">
+  <label class="sr" for="q">ابحث عن صنف</label>
+  <input id="q" type="search" placeholder="ابحث عن صنف، مثلاً: سمك" autocomplete="off">
+</div>
+<nav class="cats" id="cats" aria-label="أقسام المنيو"></nav>
+<main id="menu"></main>
+
+<footer>
+  <p>هذا نموذج تجريبي لمنيو رقمي. الأصناف والأسعار قابلة للتعديل بالكامل، ويمكن ربطه بلوحة تحكم لتعديلها بدون برمجة.</p>
+  <p>اضغط "أضف" على أي صنف لتجرّب إرسال الطلب.</p>
+</footer>
+
+<div class="cartbar" id="cartbar" hidden>
+  <button type="button" id="openCart"><span>مراجعة الطلب<span class="count" id="ccount">0</span></span><span id="ctotal"></span></button>
+</div>
+
+<dialog id="sheet" aria-labelledby="sheetTitle">
+  <div class="sheet">
+    <header><h2 id="sheetTitle">طلبك</h2><button type="button" class="close" id="closeCart" aria-label="إغلاق">✕</button></header>
+    <ul class="lines" id="lines"></ul>
+    <label class="field"><span>رقم الطاولة (اختياري)</span><input id="table" inputmode="numeric" autocomplete="off"></label>
+    <label class="field"><span>ملاحظات (اختياري)</span><textarea id="note" rows="2" placeholder="مثلاً: بدون بصل"></textarea></label>
+    <div class="total"><span>المجموع</span><span id="sheetTotal"></span></div>
+    <div class="actions">
+      <a class="btn primary" id="wa" href="#" target="_blank" rel="noopener">أرسل الطلب عبر واتساب</a>
+      <button type="button" class="btn ghost" id="copy">نسخ الطلب</button>
+      <button type="button" class="btn ghost" id="clear">تفريغ الطلب</button>
+    </div>
+  </div>
+</dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+// ===== إعدادات المطعم: تتغيّر لكل زبون =====
+const CONFIG = {
+  currency: "ل.س",
+  whatsapp: "" // رقم واتساب المطعم بصيغة دولية بدون +، مثلاً 9639XXXXXXXX
+};
+
+// ===== الأصناف =====
+const MENU = [
+  { id:"starters", title:"المقبلات", note:"تُقدَّم مع الخبز والمخلل", items:[
+    { id:"hummus", name:"حمص بالطحينة", desc:"حمص ناعم مع زيت زيتون وبهارات", price:250, tags:["veg"] },
+    { id:"mutabbal", name:"متبّل", desc:"باذنجان مشوي مع طحينة وليمون", price:275, tags:["veg"] },
+    { id:"tabbouleh", name:"تبولة", desc:"بقدونس مفروم مع برغل وليمون وزيت زيتون", price:300, tags:["veg"] },
+    { id:"kibbeh", name:"كبّة مقلية", desc:"أربع قطع محشوة لحم وصنوبر", price:450, tags:["fav"] }
+  ]},
+  { id:"seafood", title:"المأكولات البحرية", note:"سمك طازج من مرفأ اليوم", items:[
+    { id:"dennis", name:"سمك دنيس مشوي", desc:"على الفحم مع صلصة الطرطور والليمون", price:1400, tags:["fav"] },
+    { id:"sayadieh", name:"صيادية سمك", desc:"أرز بالبصل المكرمل مع سمك وصنوبر", price:1300, tags:[] },
+    { id:"squid", name:"حبّار مقلي", desc:"حلقات مقرمشة مع صلصة ثوم", price:1200, tags:[] },
+    { id:"shrimp", name:"قريدس مقلي", desc:"مع ثوم وكزبرة وليمون", price:1800, tags:["hot"] }
+  ]},
+  { id:"grill", title:"المشاوي", note:"تُقدَّم مع بطاطا وسلطة وثوم", items:[
+    { id:"shish", name:"شيش طاووق", desc:"صدور دجاج متبّلة بالزبادي والثوم", price:850, tags:["fav"] },
+    { id:"kabab", name:"كباب لحم", desc:"لحم غنم مفروم مع بقدونس وبصل", price:1000, tags:[] },
+    { id:"ribs", name:"ريش غنم", desc:"أربع قطع على الفحم", price:1500, tags:[] },
+    { id:"mixed", name:"مشاوي مشكّلة (لشخصين)", desc:"شيش طاووق وكباب وريش وكبدة", price:2800, tags:["hot"] }
+  ]},
+  { id:"sweets", title:"الحلويات", note:"", items:[
+    { id:"knafeh", name:"كنافة نابلسية", desc:"جبنة عكاوي مع قطر وفستق", price:500, tags:[] },
+    { id:"qatayef", name:"قطايف بالجوز", desc:"مقلية مع قطر خفيف", price:450, tags:[] },
+    { id:"booza", name:"بوظة عربية", desc:"بالفستق والمستكة", price:350, tags:[] }
+  ]},
+  { id:"drinks", title:"المشروبات", note:"", items:[
+    { id:"lemon", name:"ليمون بالنعنع", desc:"عصير طازج", price:250, tags:["fav"] },
+    { id:"orange", name:"عصير برتقال", desc:"من برتقال اللاذقية، بدون سكر", price:300, tags:[] },
+    { id:"tea", name:"شاي", desc:"", price:100, tags:[] },
+    { id:"coffee", name:"قهوة عربية", desc:"مع هيل", price:150, tags:[] },
+    { id:"water", name:"مياه معدنية", desc:"", price:80, tags:[] }
+  ]}
+];
+
+const TAGS = { hot:["حار","hot"], veg:["نباتي",""], fav:["الأكثر طلباً","fav"] };
+const $ = s => document.querySelector(s);
+const fmt = n => n.toLocaleString("en-US");
+const cart = {};              // id -> qty
+const byId = {};
+MENU.forEach(c => c.items.forEach(i => byId[i.id] = i));
+
+function itemHTML(i){
+  const tags = i.tags.map(t => `<span class="tag ${TAGS[t][1]}">${TAGS[t][0]}</span>`).join("");
+  return `<article class="item" id="it-${i.id}" data-id="${i.id}">
+    <div class="line"><h3 class="name">${i.name}</h3><span class="leader" aria-hidden="true"></span>
+      <span class="price">${fmt(i.price)} <small>${CONFIG.currency}</small></span></div>
+    ${i.desc ? `<p class="desc">${i.desc}</p>` : ""}
+    <div class="meta"><div class="tags">${tags}</div><div class="ctrl">${ctrlHTML(i.id)}</div></div>
+  </article>`;
+}
+function ctrlHTML(id){
+  const q = cart[id] || 0;
+  if(!q) return `<button type="button" class="add" data-act="inc" data-id="${id}" aria-label="أضف ${byId[id].name} إلى الطلب">أضف</button>`;
+  return `<span class="step"><button type="button" data-act="inc" data-id="${id}" aria-label="زيادة">+</button><output aria-live="polite">${q}</output><button type="button" data-act="dec" data-id="${id}" aria-label="إنقاص">−</button></span>`;
+}
+
+function renderMenu(filter){
+  const f = (filter||"").trim();
+  let html = "", shown = 0;
+  MENU.forEach(c => {
+    const items = c.items.filter(i => !f || (i.name + " " + i.desc).includes(f));
+    if(!items.length) return;
+    shown += items.length;
+    html += `<section class="cat" id="cat-${c.id}" data-cat="${c.id}"><h2>${c.title}</h2>${c.note && !f ? `<p class="note">${c.note}</p>` : ""}${items.map(itemHTML).join("")}</section>`;
+  });
+  $("#menu").innerHTML = shown ? html : `<p class="empty">ما لقينا صنف بهالاسم. جرّب كلمة تانية.</p>`;
+  $("#cats").style.display = f ? "none" : "flex";
+  observe();
+}
+
+function renderCats(){
+  $("#cats").innerHTML = MENU.map((c,k) => `<button type="button" data-cat="${c.id}" ${k===0?'aria-current="true"':''}>${c.title}</button>`).join("");
+}
+
+let io;
+function observe(){
+  if(io) io.disconnect();
+  if(!("IntersectionObserver" in window)) return;
+  io = new IntersectionObserver(es => {
+    es.forEach(e => { if(e.isIntersecting) setActive(e.target.dataset.cat); });
+  }, { rootMargin:"-30% 0px -60% 0px" });
+  document.querySelectorAll(".cat").forEach(s => io.observe(s));
+}
+function setActive(id){
+  document.querySelectorAll("#cats button").forEach(b => {
+    const on = b.dataset.cat === id;
+    if(on){ b.setAttribute("aria-current","true"); b.scrollIntoView({inline:"center", block:"nearest"}); }
+    else b.removeAttribute("aria-current");
+  });
+}
+
+function totals(){
+  let n = 0, sum = 0;
+  Object.keys(cart).forEach(id => { n += cart[id]; sum += cart[id] * byId[id].price; });
+  return { n, sum };
+}
+function refreshCart(){
+  const { n, sum } = totals();
+  $("#cartbar").hidden = n === 0;
+  $("#ccount").textContent = n;
+  $("#ctotal").textContent = fmt(sum) + " " + CONFIG.currency;
+  if(n === 0 && $("#sheet").open) closeSheet();
+}
+function change(id, d){
+  cart[id] = Math.max(0, (cart[id]||0) + d);
+  if(!cart[id]) delete cart[id];
+  const el = document.querySelector(`#it-${id} .ctrl`);
+  if(el) el.innerHTML = ctrlHTML(id);
+  refreshCart();
+  if($("#sheet").open) renderSheet();
+}
+
+/* order sheet */
+function orderText(){
+  const table = $("#table").value.trim(), note = $("#note").value.trim();
+  const rows = Object.keys(cart).map(id => `- ${cart[id]}× ${byId[id].name} = ${fmt(cart[id]*byId[id].price)} ${CONFIG.currency}`);
+  return "طلب جديد" + (table ? ` (طاولة ${table})` : "") + "\n" + rows.join("\n") +
+    `\nالمجموع: ${fmt(totals().sum)} ${CONFIG.currency}` + (note ? `\nملاحظات: ${note}` : "");
+}
+function renderSheet(){
+  $("#lines").innerHTML = Object.keys(cart).map(id => `<li><span class="ln">${byId[id].name}</span>
+    <span class="step"><button type="button" data-act="inc" data-id="${id}" aria-label="زيادة ${byId[id].name}">+</button><output>${cart[id]}</output><button type="button" data-act="dec" data-id="${id}" aria-label="إنقاص ${byId[id].name}">−</button></span>
+    <span class="lp">${fmt(cart[id]*byId[id].price)}</span></li>`).join("");
+  $("#sheetTotal").textContent = fmt(totals().sum) + " " + CONFIG.currency;
+  updateWA();
+}
+function updateWA(){
+  $("#wa").href = "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(orderText());
+}
+function openSheet(){ renderSheet(); const d = $("#sheet"); d.showModal ? d.showModal() : d.setAttribute("open",""); }
+function closeSheet(){ const d = $("#sheet"); d.close ? d.close() : d.removeAttribute("open"); }
+
+let tt;
+function toast(msg){
+  const t = $("#toast"); t.textContent = msg; t.classList.add("on");
+  clearTimeout(tt); tt = setTimeout(() => t.classList.remove("on"), 2000);
+}
+async function copyText(txt){
+  try{ await navigator.clipboard.writeText(txt); toast("تم نسخ الطلب"); }
+  catch(e){
+    const ta = document.createElement("textarea"); ta.value = txt; document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); toast("تم نسخ الطلب"); }catch(_){ toast("تعذّر النسخ"); }
+    ta.remove();
+  }
+}
+
+/* events */
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-act]");
+  if(b){ change(b.dataset.id, b.dataset.act === "inc" ? 1 : -1); return; }
+  const c = e.target.closest("#cats button");
+  if(c){
+    const s = document.getElementById("cat-" + c.dataset.cat);
+    if(s) s.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"start" });
+  }
+});
+$("#q").addEventListener("input", e => renderMenu(e.target.value));
+$("#openCart").addEventListener("click", openSheet);
+$("#closeCart").addEventListener("click", closeSheet);
+$("#table").addEventListener("input", updateWA);
+$("#note").addEventListener("input", updateWA);
+$("#copy").addEventListener("click", () => copyText(orderText()));
+$("#clear").addEventListener("click", () => { Object.keys(cart).forEach(k => delete cart[k]); document.querySelectorAll(".ctrl").forEach(el => { el.innerHTML = ctrlHTML(el.closest(".item").dataset.id); }); refreshCart(); });
+
+/* QR: opens this same page */
+try{
+  new QRCode(document.getElementById("qr"), { text: location.href, width:96, height:96, colorDark:"#0D2B36", colorLight:"#FFFFFF", correctLevel: QRCode.CorrectLevel.M });
+}catch(err){ const q = document.getElementById("qrbox"); if(q) q.style.display = "none"; }
+
+renderCats();
+renderMenu("");
+</script>
+</body>
+</html>
